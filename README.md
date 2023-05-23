@@ -21,6 +21,16 @@ pip install -e .
 
 ..............................................
 
+~~~~~~~
+
+### Package for Data Prepocessing 
+from city_sustainability.preprocessing import image_resize
+
+### Package for Data Loading
+from city_sustainability.loading_data import loading_paths
+
+~~~~~~~
+
 ### Package for Model
 ~~~~~
 
