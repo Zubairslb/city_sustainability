@@ -53,7 +53,6 @@ def image_and_label_arrays(image_paths, label_paths, sampling_ratio = 1):
 
     for label_path in label_paths[0:end]:
         lb = Image.open(label_path)
-        # Generate array for each label
         # Resize each label using image_resize function
         resized_label = image_resize(256,256,lb)
         # Generate array for each image
