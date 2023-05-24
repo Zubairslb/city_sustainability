@@ -10,6 +10,7 @@ from tensorflow.keras.layers import (
 )
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.callbacks import ReduceLROnPlateau
+import tensorflow as tf
 
 
 def encoder(inputs):
@@ -52,10 +53,15 @@ def build_model(input_shape=(28, 28, 1), num_classes=12):
 
 def compile_model(model, optimizer='adam'):
     model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
-
+    
+def compute_iou(y_true, y_pred):
+    intersection = tf.reduce_sum(y_true * y_pred, axis=[1, 2, 3])
+    union = tf.reduce_sum(y_true + y_pred, axis=[1, 2, 3]) - intersection
+    iou = tf.reduce_mean((intersection + 1e-7) / (union + 1e-7))
+    return iou
 
 def train_model(model, x, y, epochs=1, batch_size=32, validation_split=0.1):
-    model.compile(optimizer=Adam(learning_rate=0.0001), loss='categorical_crossentropy', metrics=['accuracy'])
+    model.compile(optimizer=Adam(learning_rate=0.0001), loss='categorical_crossentropy', metrics=['accuracy', compute_iou])
     lr_reducer = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=5, min_lr=0.00001, verbose=1)
     model.fit(x, y, epochs=epochs, batch_size=batch_size, validation_split=validation_split, callbacks=[lr_reducer])
 
