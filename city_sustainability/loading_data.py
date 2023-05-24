@@ -59,7 +59,7 @@ def image_and_label_arrays(image_paths, label_paths, sampling_ratio = 1):
         # Generate array for each image
         numpy_array_label = np.array(resized_label)
         # Encode labels
-        encoded_label = to_categorical(numpy_array_label, num_classes=8)
+        encoded_label = to_categorical(numpy_array_label, num_classes=9)
         # Add resized and encoded array to list
         label_list_array.append(encoded_label)
     
