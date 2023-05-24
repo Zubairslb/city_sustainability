@@ -10,6 +10,7 @@ from tensorflow.keras.layers import (
 )
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.callbacks import ReduceLROnPlateau
+import tensorflow as tf
 
 
 def encoder(inputs):
