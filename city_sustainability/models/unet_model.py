@@ -11,6 +11,7 @@ from tensorflow.keras.layers import (
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.callbacks import ReduceLROnPlateau
 import tensorflow as tf
+from tensorflow.keras.applications.vgg16 import VGG16
 
 
 def encoder(inputs):
@@ -51,9 +52,23 @@ def build_model(input_shape=(28, 28, 1), num_classes=12):
     return Model(inputs=inputs, outputs=outputs)
 
 
+
+def build_vgg16_model(input_shape=(28, 28, 1), num_classes=12 ):
+    model_vgg = VGG16(weights="imagenet", include_top=False, input_shape=input_shape)
+    for layer in model_vgg.layers:
+        layer.trainable = False
+    inputs = model_vgg.layers[0].output
+    conv1 = model_vgg.get_layer('block1_conv2').output
+    conv2 = model_vgg.get_layer('block2_conv2').output
+    encoded = model_vgg.get_layer('block3_conv3').output
+    decoded = decoder(conv1, conv2, encoded)
+    outputs = Conv2D(num_classes, (1, 1), activation='softmax')(decoded)
+    return Model(inputs=inputs, outputs=outputs)
+
+
 def compile_model(model, optimizer='adam'):
     model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
-    
+
 def compute_iou(y_true, y_pred):
     intersection = tf.reduce_sum(y_true * y_pred, axis=[1, 2, 3])
     union = tf.reduce_sum(y_true + y_pred, axis=[1, 2, 3]) - intersection
