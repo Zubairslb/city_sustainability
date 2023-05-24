@@ -8,7 +8,7 @@ import numpy as np
 from PIL import Image
 from keras.utils import to_categorical
 
-def image_and_label_arrays(image_paths, label_paths, sampling_ratio=1, batch_size=None):
+def image_and_label_arrays_batch(image_paths, label_paths, sampling_ratio=1, batch_size=None):
     # Default sampling_ratio is equal to 1.0 (selects all samples)
     if sampling_ratio < 1.0:
         end = round(sampling_ratio * len(image_paths))
