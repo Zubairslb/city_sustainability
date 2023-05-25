@@ -4,6 +4,9 @@ import numpy as np
 import PIL
 import matplotlib.pyplot as plt
 from city_sustainability.quality import life_quality
+from PIL import Image
+from tensorflow.keras.utils import to_categorical
+from city_sustainability.preprocessing import image_resize
 
 # Title
 st.title("Watch our model do some magic!! Upload an image and get the quality of life prediction :)")
