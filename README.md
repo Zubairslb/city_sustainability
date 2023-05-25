@@ -23,7 +23,7 @@ pip install -e .
 
 ~~~~~~~
 
-### Package for Data Prepocessing 
+### Package for Data Prepocessing
 from city_sustainability.preprocessing import image_resize
 
 ### Package for Data Loading
@@ -54,7 +54,14 @@ predictions = predict(model, x_test)
 ~~~~~
 
 .........................................................................................
+### Streamlit
+.........................................................................................
 
+install streamlit by running requirements
+
+streamlit run Home.py
+
+.........................................................................................
 
 check jupyter notebook/jupyterlab working or not.
 
