@@ -55,7 +55,7 @@ values = list(class_percentages.values())
 
 # Create a pie chart
 fig, ax = plt.subplots()
-pie = ax.pie(values, labels=labels, autopct='%1.1f%%', startangle=90)
+pie = ax.pie(values, labels=None, autopct=None, startangle=90)
 
 # Set aspect ratio to be equal so that pie is drawn as a circle
 ax.axis('equal')
@@ -63,12 +63,14 @@ ax.axis('equal')
 # Add a title to the pie chart
 ax.set_title("Class distribution in the image")
 
-# Move the legend to the side
-ax.legend(labels, loc="center left", bbox_to_anchor=(1, 0.5))
+# Create legend entries with values only
+legend_labels = [f"{label}: {value:.2f}%" for label, value in zip(labels, values)]
 
-# Adjust label spacing
-for label in pie[1]:
-    label.set_horizontalalignment('center')
+# Order legend entries in descending order based on values
+legend_labels = [label for _, label in sorted(zip(values, legend_labels), reverse=True)]
+
+# Move the legend to the side and display legend entries
+ax.legend(legend_labels, loc="center left", bbox_to_anchor=(1, 0.5))
 
 # Display the pie chart in Streamlit
 st.pyplot(fig)
