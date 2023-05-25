@@ -16,7 +16,7 @@ def life_quality(array):
 
     class_sums = np.sum(array, axis=(0, 1))
     total_sum = np.sum(class_sums)
-    class_percentages = {Class_labels[i]: round((sum / total_sum), 2) for i, sum in enumerate(class_sums)}
+    class_percentages = {Class_labels[i]: round((sum / total_sum)*100, 2) for i, sum in enumerate(class_sums)}
 
     # Calculate metric score
     environmental_metric = class_percentages.get('Rangeland', 0) + class_percentages.get('Tree', 0) + class_percentages.get('Water', 0)
