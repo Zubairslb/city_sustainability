@@ -49,14 +49,13 @@ st.image(lb_1)
 #### Display class_percentage as pie-chart
 
 
-
 # Extract the labels and values from the dictionary
 labels = list(class_percentages.keys())
 values = list(class_percentages.values())
 
 # Create a pie chart
 fig, ax = plt.subplots()
-ax.pie(values, labels=labels, autopct='%1.1f%%', startangle=90)
+pie = ax.pie(values, labels=labels, autopct='%1.1f%%', startangle=90)
 
 # Set aspect ratio to be equal so that pie is drawn as a circle
 ax.axis('equal')
@@ -66,6 +65,10 @@ ax.set_title("Class distribution in the image")
 
 # Move the legend to the side
 ax.legend(labels, loc="center left", bbox_to_anchor=(1, 0.5))
+
+# Adjust label spacing
+for label in pie[1]:
+    label.set_horizontalalignment('center')
 
 # Display the pie chart in Streamlit
 st.pyplot(fig)
@@ -80,7 +83,7 @@ labels_1 = [metric[0] for metric in sorted_metrics]
 values_1 = [float(metric[1]) for metric in sorted_metrics]
 
 # Define custom colors for the bars
-colors = ['green', 'blue', 'brown']
+colors = ['brown', 'green', 'blue']
 
 # Create a bar chart
 fig, ax = plt.subplots()
@@ -93,13 +96,16 @@ for i in range(len(bars)):
 # Rotate the x-axis labels
 plt.xticks(rotation=0)
 
-# Add labels to the bars
+# Add labels to the bars (rounded to 2 decimal places)
 for i, bar in enumerate(bars):
     height = bar.get_height()
-    ax.text(bar.get_x() + bar.get_width() / 2, height, values_1[i], ha='center', va='bottom')
+    ax.text(bar.get_x() + bar.get_width() / 2, height, f'{values_1[i]:.2f}', ha='center', va='bottom')
 
 # Set the title of the x-axis
 ax.set_xlabel("Metric")
+
+# Set the y-axis limits to 0 and 1
+ax.set_ylim(0, 1)
 
 # Add a title to the chart
 ax.set_title('Metric values in the image')
