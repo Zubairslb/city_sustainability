@@ -23,21 +23,11 @@ pip install -e .
 
 ~~~~~~~
 
-### Package for Data Prepocessing 
+### Package for Data Prepocessing
 from city_sustainability.preprocessing import image_resize
 
 ### Package for Data Loading
 from city_sustainability.loading_data import loading_paths
-
-### Package for Data Loading in batches
-from city_sustainability.loading_batch import image_and_label_arrays_batch
-
-# Import all image array as X and label array as y
-
-image_paths = [...]  # List of image file paths
-label_paths = [...]  # List of label file paths
-
-X, y = image_and_label_arrays_batch(image_paths, label_paths, sampling_ratio=1, batch_size=32)
 
 ~~~~~~~
 
@@ -64,7 +54,20 @@ predictions = unet_model.predict(model, x_test)
 ~~~~~
 
 .........................................................................................
+### Streamlit
+.........................................................................................
 
+install streamlit by running requirements
+
+go to city_sustainability folder
+run below command
+!pip install requirements.txt
+
+then go to streamlit folder and run below command
+
+streamlit run Home.py
+
+.........................................................................................
 
 check jupyter notebook/jupyterlab working or not.
 
