@@ -39,4 +39,12 @@ numpy_array_label = np.array(resized_label)
 encoded_label = to_categorical(numpy_array_label, num_classes=9)
 
 # Run quality of life prediction
-life_quality(encoded_label)
+class_percentages, sorted_metrics, classification = life_quality(encoded_label)
+
+# Display the image in Streamlit
+st.pyplot(lb_1)
+
+# Display function results
+st.write(class_percentages)
+st.write(sorted_metrics)
+st.write(classification)
