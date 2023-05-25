@@ -81,6 +81,7 @@ def train_model(model, x, y, epochs=1, batch_size=32, validation_split=0.1):
     lr_reducer = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=5, min_lr=0.00001, verbose=1)
     early_stopper = EarlyStopping(monitor='val_loss', patience=10, verbose=1)
     history = model.fit(x, y, epochs=epochs, batch_size=batch_size, validation_split=validation_split, callbacks=[lr_reducer, early_stopper])
+    return history
 
 
 
