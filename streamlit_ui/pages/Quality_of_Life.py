@@ -44,12 +44,11 @@ class_percentages, sorted_metrics, classification = life_quality(encoded_label)
 # Display the image in Streamlit
 st.image(lb_1)
 
-# Display function results
-st.write(class_percentages)
-st.write(sorted_metrics)
-st.write(classification)
 
-# Display class_percentage as pie-chart
+
+#### Display class_percentage as pie-chart
+
+
 
 # Extract the labels and values from the dictionary
 labels = list(class_percentages.keys())
@@ -62,19 +61,36 @@ ax.pie(values, labels=labels, autopct='%1.1f%%', startangle=90)
 # Set aspect ratio to be equal so that pie is drawn as a circle
 ax.axis('equal')
 
+# Add a title to the pie chart
+ax.set_title("Class distribution in the image")
+
+# Move the legend to the side
+ax.legend(labels, loc="center left", bbox_to_anchor=(1, 0.5))
+
 # Display the pie chart in Streamlit
 st.pyplot(fig)
 
 
-# Display sorted_metrics as a bie-chart
+
+#### Display sorted_metrics as a bie-chart
+
+
 
 # Extract the labels and values from the sorted_metrics
 labels_1 = [metric[0] for metric in sorted_metrics]
 values_1 = [float(metric[1]) for metric in sorted_metrics]
 
-# Create a bar chart
-data = {'Labels': labels_1, 'Values': values_1}
-st.bar_chart(data=data, x='Labels', y='Values')
+# Define custom colors for the bars
+colors = ['green', 'blue', 'brown']
 
-# Display final result
+# Create a bar chart
+data = {'Metric': labels_1, 'Value': values_1}
+chart = st.bar_chart(data=data, x='Metric', y='Value', color=colors)
+
+# Rotate the x-axis labels
+chart.set_xticklabels(labels_1, rotation=0)
+
+
+
+#### Display final result
 st.write("The model predicts:", classification)
