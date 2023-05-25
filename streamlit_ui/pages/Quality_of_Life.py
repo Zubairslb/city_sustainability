@@ -20,5 +20,20 @@ st.write("************")
 st.write("Later on these metrics are classified into High, Medium and Low quality of life")
 st.write("************")
 
+# Upload image
 data_file = st.file_uploader(label='Upload an Image')
-life_quality(data_file)
+
+# Generate image
+lb_1 = Image.open(data_file)
+
+# Resize each label using image_resize function
+resized_label = image_resize(256,256,lb_1)
+
+# Generate array for each image
+numpy_array_label = np.array(resized_label)
+
+# Encode labels
+encoded_label = to_categorical(numpy_array_label, num_classes=9)
+
+# Run quality of life prediction
+life_quality(encoded_label)
