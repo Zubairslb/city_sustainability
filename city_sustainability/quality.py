@@ -37,6 +37,8 @@ def life_quality(array):
     classification = ''
     if sorted_metrics == [('Environmental', environmental_metric), ('Infrastructure', infrastructure_metric), ('Land', land_metric)] or sorted_metrics == [('Infrastructure', infrastructure_metric), ('Environmental', environmental_metric), ('Land', land_metric)]:
         classification = 'High quality of life'
+    elif infrastructure_metric > 70:
+        classification = 'Medium quality of life'
     elif sorted_metrics == [('Environmental', environmental_metric), ('Land', land_metric), ('Infrastructure', infrastructure_metric)] or sorted_metrics == [('Infrastructure', infrastructure_metric), ('Land', land_metric), ('Environmental', environmental_metric)] or sorted_metrics == [('Land', land_metric), ('Infrastructure', infrastructure_metric), ('Environmental', environmental_metric)]:
         classification = 'Medium quality of life'
     elif sorted_metrics == [('Land', land_metric), ('Environmental', environmental_metric), ('Infrastructure', infrastructure_metric)]:
