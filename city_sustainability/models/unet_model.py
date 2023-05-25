@@ -86,9 +86,16 @@ def train_model(model, x, y, epochs=1, batch_size=32, validation_split=0.1):
 
 def evaluate_model(model, x, y):
     loss, accuracy = model.evaluate(x, y)
+    
+    # Calculate IoU
+    y_pred = model.predict(x)
+    iou = compute_iou(y, y_pred)
+    
     print("Evaluation results:")
     print(f"Loss: {loss:.4f}")
     print(f"Accuracy: {accuracy:.4f}")
+    print(f"IoU: {iou:.4f}")
+
 
 
 def predict(model, x):
