@@ -48,3 +48,33 @@ st.image(lb_1)
 st.write(class_percentages)
 st.write(sorted_metrics)
 st.write(classification)
+
+# Display class_percentage as pie-chart
+
+# Extract the labels and values from the dictionary
+labels = list(class_percentages.keys())
+values = list(class_percentages.values())
+
+# Create a pie chart
+fig, ax = plt.subplots()
+ax.pie(values, labels=labels, autopct='%1.1f%%', startangle=90)
+
+# Set aspect ratio to be equal so that pie is drawn as a circle
+ax.axis('equal')
+
+# Display the pie chart in Streamlit
+st.pyplot(fig)
+
+
+# Display sorted_metrics as a bie-chart
+
+# Extract the labels and values from the sorted_metrics
+labels_1 = [metric[0] for metric in sorted_metrics]
+values_1 = [float(metric[1]) for metric in sorted_metrics]
+
+# Create a bar chart
+data = {'Labels': labels_1, 'Values': values_1}
+st.bar_chart(data=data, x='Labels', y='Values')
+
+# Display final result
+st.write("The model predicts:", classification)
