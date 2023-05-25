@@ -42,7 +42,8 @@ encoded_label = to_categorical(numpy_array_label, num_classes=9)
 class_percentages, sorted_metrics, classification = life_quality(encoded_label)
 
 # Display the image in Streamlit
-st.image(lb_1)
+plt.imshow(lb_1)
+st.image(plt)
 
 # Display function results
 st.write(class_percentages)
