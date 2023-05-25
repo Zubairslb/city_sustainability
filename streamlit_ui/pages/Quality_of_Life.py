@@ -3,9 +3,10 @@ import pandas as pd
 import numpy as np
 import PIL
 import matplotlib.pyplot as plt
+from city_sustainability.quality import life_quality
 
 # Title
-st.title("Watch our model do some magic! Upload an image and get the quality of life prediction")
+st.title("Watch our model do some magic!! Upload an image and get the quality of life prediction :)")
 
 # Add some text
 st.write("Our quality of life preduction first divides the classes into 3 metrics:")
@@ -17,5 +18,7 @@ st.write("3. Land_metric")
 st.write("    Sum of the percentages of Bareland, Agriculture land, and Other")
 st.write("************")
 st.write("Later on these metrics are classified into High, Medium and Low quality of life")
+st.write("************")
 
 data_file = st.file_uploader(label='Upload an Image')
+life_quality(data_file)
