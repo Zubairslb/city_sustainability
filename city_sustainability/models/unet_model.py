@@ -9,7 +9,7 @@ from tensorflow.keras.layers import (
     Input,
 )
 from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.callbacks import ReduceLROnPlateau
+from tensorflow.keras.callbacks import ReduceLROnPlateau, EarlyStopping
 import tensorflow as tf
 from tensorflow.keras.applications.vgg16 import VGG16
 
@@ -75,17 +75,27 @@ def compute_iou(y_true, y_pred):
     iou = tf.reduce_mean((intersection + 1e-7) / (union + 1e-7))
     return iou
 
+
 def train_model(model, x, y, epochs=1, batch_size=32, validation_split=0.1):
     model.compile(optimizer=Adam(learning_rate=0.0001), loss='categorical_crossentropy', metrics=['accuracy', compute_iou])
     lr_reducer = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=5, min_lr=0.00001, verbose=1)
-    model.fit(x, y, epochs=epochs, batch_size=batch_size, validation_split=validation_split, callbacks=[lr_reducer])
+    early_stopper = EarlyStopping(monitor='val_loss', patience=10, verbose=1)
+    model.fit(x, y, epochs=epochs, batch_size=batch_size, validation_split=validation_split, callbacks=[lr_reducer, early_stopper])
+
 
 
 def evaluate_model(model, x, y):
     loss, accuracy = model.evaluate(x, y)
+    
+    # Calculate IoU
+    y_pred = model.predict(x)
+    iou = compute_iou(y, y_pred)
+    
     print("Evaluation results:")
     print(f"Loss: {loss:.4f}")
     print(f"Accuracy: {accuracy:.4f}")
+    print(f"IoU: {iou:.4f}")
+
 
 
 def predict(model, x):

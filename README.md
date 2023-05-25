@@ -29,6 +29,16 @@ from city_sustainability.preprocessing import image_resize
 ### Package for Data Loading
 from city_sustainability.loading_data import loading_paths
 
+### Package for Data Loading in batches
+from city_sustainability.loading_batch import image_and_label_arrays_batch
+
+# Import all image array as X and label array as y
+
+image_paths = [...]  # List of image file paths
+label_paths = [...]  # List of label file paths
+
+X, y = image_and_label_arrays_batch(image_paths, label_paths, sampling_ratio=1, batch_size=32)
+
 ~~~~~~~
 
 ### Package for Model
@@ -43,13 +53,13 @@ model = unet_model.build_model(input_shape=(a, b, 3), num_classes=c)
 unet_model.compile_model(model)
 
 ### Train the model:-)
-unet_model.train_model(model, x_train , y_train  , epochs=1, batch_size=512, validation_split=0.2)
+history = unet_model.train_model(model, x_train , y_train  , epochs=1, batch_size=512, validation_split=0.2)
 
 ### Evaluate the model:-)
-evaluate_model(model, x_test, y_test)
+unet_model.evaluate_model(model, x_test, y_test)
 
 ### Make predictions:-)
-predictions = predict(model, x_test)
+predictions = unet_model.predict(model, x_test)
 
 ~~~~~
 
