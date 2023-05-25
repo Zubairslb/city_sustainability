@@ -9,7 +9,7 @@ from tensorflow.keras.utils import to_categorical
 from city_sustainability.preprocessing import image_resize
 
 # Title
-st.title("Watch our model do some magic!! Upload an image and get the quality of life prediction :)")
+st.title("Watch our model do some magic!! Upload an image and get the quality of life prediction :sunglasses:")
 
 # Upload image
 data_file = st.file_uploader(label='Upload an Image')
@@ -26,11 +26,17 @@ numpy_array_label = np.array(resized_label)
 # Encode labels
 encoded_label = to_categorical(numpy_array_label, num_classes=9)
 
+# Display the image in Streamlit
+#fig = plt.imshow(lb_1)
+#st.pyplot(fig)
+
+fig = plt.figure()
+ax1 = fig.add_subplot(1,1,1)
+ax1.imshow(lb_1)
+st.pyplot(fig)
+
 # Run quality of life prediction
 class_percentages, sorted_metrics, classification = life_quality(encoded_label)
-
-# Display the image in Streamlit
-st.image(lb_1)
 
 
 
@@ -41,9 +47,12 @@ st.image(lb_1)
 labels = list(class_percentages.keys())
 values = list(class_percentages.values())
 
-# Create a pie chart
+# Define a fixed color palette
+colors = ['green', 'blue', 'brown', 'orange', 'purple', 'pink', 'gray', 'cyan', 'yellow']
+
+# Create a pie chart with custom colors
 fig, ax = plt.subplots()
-pie = ax.pie(values, labels=None, autopct=None, startangle=90)
+pie = ax.pie(values, labels=labels, startangle=90, colors=colors, autopct=None)
 
 # Set aspect ratio to be equal so that pie is drawn as a circle
 ax.axis('equal')
@@ -51,14 +60,17 @@ ax.axis('equal')
 # Add a title to the pie chart
 ax.set_title("Class distribution in the image")
 
-# Create legend entries with values only
+# Create legend entries with labels and values
 legend_labels = [f"{label}: {value:.2f}%" for label, value in zip(labels, values)]
 
 # Order legend entries in descending order based on values
 legend_labels = [label for _, label in sorted(zip(values, legend_labels), reverse=True)]
 
-# Move the legend to the side and display legend entries
-ax.legend(legend_labels, loc="center left", bbox_to_anchor=(1, 0.5))
+# Set the same fixed color palette for the legend
+legend_colors = [colors[i] for i in range(len(labels))]
+
+# Move the legend to the side and display legend entries with colors and values
+ax.legend(legend_labels, loc="center left", bbox_to_anchor=(1, 0.5), title="Class", labels=labels, handlelength=1, handletextpad=0.5, handleheight=2, edgecolor='none', facecolor='none', fontsize='small', title_fontsize='medium', framealpha=0.7, labelcolor=legend_colors)
 
 # Display the pie chart in Streamlit
 st.pyplot(fig)
@@ -116,4 +128,4 @@ st.write("Later on these metrics are used to classify the image into High, Mediu
 st.write("************")
 
 #### Display final result
-st.write("The model predicts:", classification)
+st.write("# The model predicts:", classification)
