@@ -75,7 +75,6 @@ st.pyplot(fig)
 #### Display sorted_metrics as a bie-chart
 
 
-
 # Extract the labels and values from the sorted_metrics
 labels_1 = [metric[0] for metric in sorted_metrics]
 values_1 = [float(metric[1]) for metric in sorted_metrics]
@@ -84,11 +83,29 @@ values_1 = [float(metric[1]) for metric in sorted_metrics]
 colors = ['green', 'blue', 'brown']
 
 # Create a bar chart
-data = {'Metric': labels_1, 'Value': values_1}
-chart = st.bar_chart(data=data, x='Metric', y='Value', color=colors)
+fig, ax = plt.subplots()
+bars = ax.bar(labels_1, values_1)
+
+# Set custom colors for the bars
+for i in range(len(bars)):
+    bars[i].set_color(colors[i])
 
 # Rotate the x-axis labels
-chart.set_xticklabels(labels_1, rotation=0)
+plt.xticks(rotation=0)
+
+# Add labels to the bars
+for i, bar in enumerate(bars):
+    height = bar.get_height()
+    ax.text(bar.get_x() + bar.get_width() / 2, height, values_1[i], ha='center', va='bottom')
+
+# Set the title of the x-axis
+ax.set_xlabel("Metric")
+
+# Add a title to the chart
+ax.set_title('Metric values in the image')
+
+# Display the chart in Streamlit
+st.pyplot(fig)
 
 
 
