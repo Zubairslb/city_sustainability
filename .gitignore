@@ -160,3 +160,5 @@ cython_debug/
 #.idea/
 raw_data/*
 .python-version
+*Zone.Identifier
+model_training/*
