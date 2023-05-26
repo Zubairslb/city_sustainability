@@ -81,7 +81,7 @@ def train_model(model, x, y, epochs=1, batch_size=32, validation_split=0.1, clas
     # Compute class weights
     if class_balance:
         class_labels = np.unique(np.argmax(y, axis=1))
-        class_weights = compute_class_weight('balanced', class_labels, np.argmax(y, axis=1))
+        class_weights = compute_class_weight('balanced', classes = class_labels, y = np.argmax(y, axis=1))
         class_weights = dict(zip(class_labels, class_weights))
     else:
         class_weights = None
