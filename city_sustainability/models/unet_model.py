@@ -86,7 +86,6 @@ def train_model(model, x, y, epochs=1, batch_size=32, validation_split=0.1, clas
         class_labels = np.unique(np.argmax(y, axis=1))
         y_flat = np.argmax(y, axis=1)  # Flatten the array
         class_weights = class_weight.compute_class_weight('balanced', class_labels, y_flat)
-        class_weights = dict(zip(class_labels, class_weights))
     else:
         class_weights = None
     
