@@ -81,14 +81,15 @@ from sklearn.utils.class_weight import compute_class_weight
 
 def compute_class_weights(class_weight, *, classes, y):
     class_labels = np.arange(y.shape[-1])
-    class_weights = compute_class_weight("balanced", np.argmax(y, axis=-1).flatten(), classes=class_labels)
+    class_weights = compute_class_weight(class_weight, np.argmax(y, axis=-1).flatten(), classes=class_labels)
     return dict(zip(class_labels, class_weights))
 
 def train_model(model, x, y, epochs=1, batch_size=32, validation_split=0.1, class_balance=False):
     class_weights_dict = None
     
     if class_balance:
-        class_weights_dict = compute_class_weights(y)
+        class_labels = np.unique(np.argmax(y, axis=-1))
+        class_weights_dict = compute_class_weights(class_weight='balanced', classes=class_labels, y=y)
     
     model.compile(optimizer=Adam(learning_rate=0.0001), loss='categorical_crossentropy', metrics=['accuracy', compute_iou])
     lr_reducer = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=5, min_lr=0.00001, verbose=1)
