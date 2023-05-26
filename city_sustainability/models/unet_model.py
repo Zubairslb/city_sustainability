@@ -12,6 +12,7 @@ from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.callbacks import ReduceLROnPlateau, EarlyStopping
 import tensorflow as tf
 from tensorflow.keras.applications.vgg16 import VGG16
+import numpy as np
 
 
 def encoder(inputs):
