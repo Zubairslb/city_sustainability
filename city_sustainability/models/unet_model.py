@@ -81,7 +81,7 @@ from sklearn.utils.class_weight import compute_class_weight
 
 def compute_class_weights(y):
     class_labels = np.unique(y)
-    class_weights = compute_class_weight('balanced', class_labels, y)
+    class_weights = compute_class_weight(None, y)
     return dict(zip(class_labels, class_weights))
 
 def train_model(model, x, y, epochs=1, batch_size=32, validation_split=0.1, class_balance=False):
