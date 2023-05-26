@@ -127,33 +127,25 @@ def compute_iou(y_true, y_pred):
     return iou
 
 
+from sklearn.utils.class_weight import compute_class_weight
 
-class ClassWeightCallback(tf.keras.callbacks.Callback):
-    def __init__(self, class_weights):
-        super(ClassWeightCallback, self).__init__()
-        self.class_weights = class_weights
 
-    def on_train_batch_begin(self, batch, logs=None):
-        class_indices = tf.argmax(self.model.targets[0], axis=1)
-        sample_weights = tf.gather(self.class_weights, class_indices)
-        self.model.sample_weights = sample_weights
+def compute_class_weights(class_weight, *, classes, y):
+    class_labels = np.arange(y.shape[-1])
+    class_weights = compute_class_weight("balanced", np.argmax(y, axis=-1).flatten(), classes=class_labels)
+    return dict(zip(class_labels, class_weights))
 
 def train_model(model, x, y, epochs=1, batch_size=32, validation_split=0.1, class_balance=False):
+    class_weights_dict = None
+    
     if class_balance:
-        class_labels = np.unique(np.argmax(y, axis=1))
-        y_flat = np.argmax(y, axis=1)
-        class_weights = class_weight.compute_class_weight('balanced', class_labels, y_flat)
-        class_weight_dict = dict(zip(class_labels, class_weights))
-        class_weight_callback = ClassWeightCallback(class_weight_dict)
-    else:
-        class_weight_callback = None
+        class_weights_dict = compute_class_weights(y)
     
     model.compile(optimizer=Adam(learning_rate=0.0001), loss='categorical_crossentropy', metrics=['accuracy', compute_iou])
     lr_reducer = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=5, min_lr=0.00001, verbose=1)
     early_stopper = EarlyStopping(monitor='val_loss', patience=10, verbose=1)
-    history = model.fit(x, y, epochs=epochs, batch_size=batch_size, validation_split=validation_split, callbacks=[lr_reducer, early_stopper], class_weight=class_weights)
+    history = model.fit(x, y, epochs=epochs, batch_size=batch_size, validation_split=validation_split, callbacks=[lr_reducer, early_stopper], class_weight=class_weights_dict)
     return history
-
 
 def evaluate_model(model, x, y):
     loss, accuracy = model.evaluate(x, y)
