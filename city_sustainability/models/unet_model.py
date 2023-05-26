@@ -83,9 +83,8 @@ def train_model(model, x, y, epochs=1, batch_size=32, validation_split=0.1, clas
     class_weights_dict = None
     
     if class_balance:
-        class_labels = np.unique(y)
-        class_weights = class_weight.compute_class_weight('balanced', class_labels, y)
-        class_weights_dict = dict(zip(class_labels, class_weights))
+        class_weights = compute_class_weight('balanced', y)
+        class_weights_dict = {i: weight for i, weight in enumerate(class_weights)}
     
     model.compile(optimizer=Adam(learning_rate=0.0001), loss='categorical_crossentropy', metrics=['accuracy', compute_iou])
     lr_reducer = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=5, min_lr=0.00001, verbose=1)
