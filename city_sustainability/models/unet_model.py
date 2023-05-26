@@ -1,4 +1,10 @@
+import numpy as np
+import tensorflow as tf
+from sklearn.utils import class_weight
 from tensorflow.keras.models import Model
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.applications.vgg16 import VGG16
+from tensorflow.keras.callbacks import ReduceLROnPlateau, EarlyStopping
 from tensorflow.keras.layers import (
     Conv2D,
     BatchNormalization,
@@ -8,12 +14,6 @@ from tensorflow.keras.layers import (
     Concatenate,
     Input,
 )
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.callbacks import ReduceLROnPlateau, EarlyStopping
-import tensorflow as tf
-from tensorflow.keras.applications.vgg16 import VGG16
-import numpy as np
-
 
 def encoder(inputs):
     conv1 = Conv2D(64, (3, 3), activation='relu', padding='same')(inputs)
@@ -45,13 +45,47 @@ def decoder(conv1, conv2, encoded):
     return conv4
 
 
+def decoder_full(conv1, conv2, conv3, conv4, conv5, encoded):
+    
+    up5 = UpSampling2D(size=(2, 2))(encoded)
+    merge5 = Concatenate(axis=3)([conv5, up5])
+    l5 = Conv2D(512, (3, 3), activation='relu', padding='same')(merge5)
+    l5 = BatchNormalization()(l5)
+    l5 = Dropout(0.1)(l5) 
+    
+    up4 = UpSampling2D(size=(2, 2))(l5)
+    merge4 = Concatenate(axis=3)([conv4, up4])
+    l4 = Conv2D(512, (3, 3), activation='relu', padding='same')(merge4)
+    l4 = BatchNormalization()(l4)
+    l4 = Dropout(0.1)(l4) 
+    
+    up3 = UpSampling2D(size=(2, 2))(l4)
+    merge3 = Concatenate(axis=3)([conv3, up3])
+    l3 = Conv2D(256, (3, 3), activation='relu', padding='same')(merge3)
+    l3 = BatchNormalization()(l3)
+    l3 = Dropout(0.1)(l3)   
+    
+    up2 = UpSampling2D(size=(2, 2))(l3)
+    merge2 = Concatenate(axis=3)([conv2, up2])
+    l2 = Conv2D(128, (3, 3), activation='relu', padding='same')(merge2)
+    l2 = BatchNormalization()(l2)
+    l2 = Dropout(0.1)(l2)
+
+    up1 = UpSampling2D(size=(2, 2))(l2)
+    merge1 = Concatenate(axis=3)([conv1, up1])
+    l1 = Conv2D(64, (3, 3), activation='relu', padding='same')(merge1)
+    l1 = BatchNormalization()(l1)
+    l1 = Dropout(0.1)(l1)
+
+    return l1
+
+
 def build_model(input_shape=(28, 28, 1), num_classes=12):
     inputs = Input(input_shape)
     conv1, conv2, encoded = encoder(inputs)
     decoded = decoder(conv1, conv2, encoded)
     outputs = Conv2D(num_classes, (1, 1), activation='softmax')(decoded)
     return Model(inputs=inputs, outputs=outputs)
-
 
 
 def build_vgg16_model(input_shape=(28, 28, 1), num_classes=12 ):
@@ -67,6 +101,22 @@ def build_vgg16_model(input_shape=(28, 28, 1), num_classes=12 ):
     return Model(inputs=inputs, outputs=outputs)
 
 
+def build_vgg16_model_full(input_shape=(28, 28, 1), num_classes=12):
+    model_vgg = VGG16(weights="imagenet", include_top=False, input_shape=input_shape)
+    for layer in model_vgg.layers:
+        layer.trainable = False
+    inputs = model_vgg.layers[0].output
+    conv1 = model_vgg.get_layer('block1_conv2').output
+    conv2 = model_vgg.get_layer('block2_conv2').output
+    conv3 = model_vgg.get_layer('block3_conv3').output
+    conv4 = model_vgg.get_layer('block4_conv3').output
+    conv5 = model_vgg.get_layer('block5_conv3').output
+    encoded = model_vgg.get_layer('block5_pool').output       
+    decoded = decoder_full(conv1, conv2, conv3, conv4, conv5, encoded)   
+    outputs = Conv2D(num_classes, (1, 1), activation='softmax')(decoded)    
+    return Model(inputs=inputs, outputs=outputs)
+
+
 def compile_model(model, optimizer='adam'):
     model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
 
@@ -77,10 +127,6 @@ def compute_iou(y_true, y_pred):
     return iou
 
 
-
-from sklearn.utils import class_weight
-
-import tensorflow as tf
 
 class ClassWeightCallback(tf.keras.callbacks.Callback):
     def __init__(self, class_weights):
@@ -120,7 +166,6 @@ def evaluate_model(model, x, y):
     print(f"Loss: {loss:.4f}")
     print(f"Accuracy: {accuracy:.4f}")
     print(f"IoU: {iou:.4f}")
-
 
 
 def predict(model, x):
