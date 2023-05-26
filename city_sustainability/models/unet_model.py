@@ -81,13 +81,13 @@ def compute_iou(y_true, y_pred):
 from sklearn.utils import class_weight
 
 def train_model(model, x, y, epochs=1, batch_size=32, validation_split=0.1, class_balance=False):
-    # Compute class weights
     if class_balance:
         class_labels = np.unique(np.argmax(y, axis=1))
-        y_flat = np.argmax(y, axis=1)  # Flatten the array
+        y_flat = np.argmax(y, axis=1)
         class_weights = class_weight.compute_class_weight('balanced', class_labels, y_flat)
+        sample_weights = class_weights[np.argmax(y, axis=1)]
     else:
-        class_weights = None
+        sample_weights = None
     
     model.compile(optimizer=Adam(learning_rate=0.0001), loss='categorical_crossentropy', metrics=['accuracy', compute_iou])
     lr_reducer = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=5, min_lr=0.00001, verbose=1)
