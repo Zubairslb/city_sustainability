@@ -76,13 +76,15 @@ def compute_iou(y_true, y_pred):
     iou = tf.reduce_mean((intersection + 1e-7) / (union + 1e-7))
     return iou
 
+
+
 from sklearn.utils.class_weight import compute_class_weight
 
 def train_model(model, x, y, epochs=1, batch_size=32, validation_split=0.1, class_balance=False):
     # Compute class weights
     if class_balance:
         class_labels = np.unique(np.argmax(y, axis=1))
-        class_weights = compute_class_weight(class_weight='balanced', classes = class_labels, y = np.argmax(y, axis=1))
+        class_weights = compute_class_weight(class_weight='balanced', classes=class_labels, y=np.argmax(y, axis=1))
         class_weights = dict(zip(class_labels, class_weights))
     else:
         class_weights = None
