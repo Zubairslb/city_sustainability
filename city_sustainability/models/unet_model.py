@@ -78,14 +78,14 @@ def compute_iou(y_true, y_pred):
 
 
 
-from sklearn.utils.class_weight import compute_class_weight
+from sklearn.utils import class_weight
 
 def train_model(model, x, y, epochs=1, batch_size=32, validation_split=0.1, class_balance=False):
     # Compute class weights
     if class_balance:
         class_labels = np.unique(np.argmax(y, axis=1))
         y_flat = np.argmax(y, axis=1)  # Flatten the array
-        class_weights = compute_class_weight(class_weight='balanced', classes=class_labels, y=y_flat)
+        class_weights = class_weight.compute_class_weight(class_weight='balanced', classes=class_labels, y=y_flat)
         class_weights = dict(zip(class_labels, class_weights))
     else:
         class_weights = None
