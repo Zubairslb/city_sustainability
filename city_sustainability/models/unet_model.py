@@ -75,29 +75,24 @@ def compute_iou(y_true, y_pred):
     iou = tf.reduce_mean((intersection + 1e-7) / (union + 1e-7))
     return iou
 
-
-def train_model(model, x, y, epochs=1, batch_size=32, validation_split=0.1):
-    model.compile(optimizer=Adam(learning_rate=0.0001), loss='categorical_crossentropy', metrics=['accuracy', compute_iou])
-    lr_reducer = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=5, min_lr=0.00001, verbose=1)
-    early_stopper = EarlyStopping(monitor='val_loss', patience=10, verbose=1)
-    history = model.fit(x, y, epochs=epochs, batch_size=batch_size, validation_split=validation_split, callbacks=[lr_reducer, early_stopper])
-    return history
-
 from sklearn.utils.class_weight import compute_class_weight
 import numpy as np
 
-def train_model_weight(model, x, y, epochs=1, batch_size=32, validation_split=0.1):
-    # Compute class weights
-    class_weights = compute_class_weight('balanced', np.unique(np.argmax(y, axis=1)), np.argmax(y, axis=1))
-    class_weights = dict(enumerate(class_weights))
+def train_model(model, x, y, epochs=1, batch_size=32, validation_split=0.1, class_balance=False):
+        
+        # Compute class weights
+    
+    if class_balance:
+        class_weights = compute_class_weight('balanced', np.unique(np.argmax(y, axis=1)), np.argmax(y, axis=1))
+        class_weights = dict(enumerate(class_weights))
+    else:
+        class_weights = None
     
     model.compile(optimizer=Adam(learning_rate=0.0001), loss='categorical_crossentropy', metrics=['accuracy', compute_iou])
     lr_reducer = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=5, min_lr=0.00001, verbose=1)
     early_stopper = EarlyStopping(monitor='val_loss', patience=10, verbose=1)
     history = model.fit(x, y, epochs=epochs, batch_size=batch_size, validation_split=validation_split, callbacks=[lr_reducer, early_stopper], class_weight=class_weights)
     return history
-
-
 
 
 def evaluate_model(model, x, y):
