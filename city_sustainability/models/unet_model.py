@@ -75,13 +75,10 @@ def compute_iou(y_true, y_pred):
     iou = tf.reduce_mean((intersection + 1e-7) / (union + 1e-7))
     return iou
 
-from sklearn.utils.class_weight import compute_class_weight
-import numpy as np
+from sklearn.utils import compute_class_weight
 
 def train_model(model, x, y, epochs=1, batch_size=32, validation_split=0.1, class_balance=False):
-        
-        # Compute class weights
-    
+    # Compute class weights
     if class_balance:
         class_weights = compute_class_weight('balanced', np.unique(np.argmax(y, axis=1)), np.argmax(y, axis=1))
         class_weights = dict(enumerate(class_weights))
