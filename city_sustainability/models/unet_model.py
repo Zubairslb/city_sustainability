@@ -12,6 +12,7 @@ from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.callbacks import ReduceLROnPlateau, EarlyStopping
 import tensorflow as tf
 from tensorflow.keras.applications.vgg16 import VGG16
+import numpy as np
 
 
 def encoder(inputs):
@@ -76,13 +77,24 @@ def compute_iou(y_true, y_pred):
     return iou
 
 
-def train_model(model, x, y, epochs=1, batch_size=32, validation_split=0.1):
+
+from sklearn.utils import class_weight
+
+def train_model(model, x, y, epochs=1, batch_size=32, validation_split=0.1, class_balance=False):
+    # Compute class weights
+    if class_balance:
+        class_labels = np.unique(np.argmax(y, axis=1))
+        y_flat = np.argmax(y, axis=1)  # Flatten the array
+        class_weights = class_weight.compute_class_weight('balanced', class_labels, y_flat)
+        class_weights = dict(zip(class_labels, class_weights))
+    else:
+        class_weights = None
+    
     model.compile(optimizer=Adam(learning_rate=0.0001), loss='categorical_crossentropy', metrics=['accuracy', compute_iou])
     lr_reducer = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=5, min_lr=0.00001, verbose=1)
     early_stopper = EarlyStopping(monitor='val_loss', patience=10, verbose=1)
-    history = model.fit(x, y, epochs=epochs, batch_size=batch_size, validation_split=validation_split, callbacks=[lr_reducer, early_stopper])
+    history = model.fit(x, y, epochs=epochs, batch_size=batch_size, validation_split=validation_split, callbacks=[lr_reducer, early_stopper], class_weight=class_weights)
     return history
-
 
 
 def evaluate_model(model, x, y):
