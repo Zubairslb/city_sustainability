@@ -80,8 +80,8 @@ def compute_iou(y_true, y_pred):
 from sklearn.utils.class_weight import compute_class_weight
 
 def compute_class_weights(y):
-    class_labels = np.unique(y)
-    class_weights = compute_class_weight(None, y)
+    class_labels = np.arange(y.shape[-1])
+    class_weights = compute_class_weight(None, np.argmax(y, axis=-1).flatten(), classes=class_labels)
     return dict(zip(class_labels, class_weights))
 
 def train_model(model, x, y, epochs=1, batch_size=32, validation_split=0.1, class_balance=False):
