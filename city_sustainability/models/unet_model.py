@@ -80,8 +80,9 @@ from sklearn.utils import compute_class_weight
 def train_model(model, x, y, epochs=1, batch_size=32, validation_split=0.1, class_balance=False):
     # Compute class weights
     if class_balance:
-        class_weights = compute_class_weight('balanced', np.unique(np.argmax(y, axis=1)), np.argmax(y, axis=1))
-        class_weights = dict(enumerate(class_weights))
+        class_labels = np.unique(np.argmax(y, axis=1))
+        class_weights = compute_class_weight('balanced', class_labels, np.argmax(y, axis=1))
+        class_weights = dict(zip(class_labels, class_weights))
     else:
         class_weights = None
     
