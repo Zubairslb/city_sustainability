@@ -89,6 +89,7 @@ def train_model(model, x, y, epochs=1, batch_size=32, validation_split=0.1, clas
         class_weights = {label: total_samples / (len(class_labels) * count) for label, count in zip(class_labels, class_counts)}
     else:
         class_weights = None
+
     
     model.compile(optimizer=Adam(learning_rate=0.0001), loss='categorical_crossentropy', metrics=['accuracy', compute_iou])
     lr_reducer = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=5, min_lr=0.00001, verbose=1)
