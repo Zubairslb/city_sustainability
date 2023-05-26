@@ -79,11 +79,17 @@ def compute_iou(y_true, y_pred):
 
 from sklearn.utils.class_weight import compute_class_weight
 
+def compute_class_weights(y):
+    class_frequencies = np.sum(y, axis=0)
+    total_samples = np.sum(class_frequencies)
+    class_weights = total_samples / (len(class_frequencies) * class_frequencies)
+    return class_weights
+
 def train_model(model, x, y, epochs=1, batch_size=32, validation_split=0.1, class_balance=False):
     class_weights_dict = None
     
     if class_balance:
-        class_weights = compute_class_weight('balanced', y)
+        class_weights = compute_class_weights(y)
         class_weights_dict = {i: weight for i, weight in enumerate(class_weights)}
     
     model.compile(optimizer=Adam(learning_rate=0.0001), loss='categorical_crossentropy', metrics=['accuracy', compute_iou])
