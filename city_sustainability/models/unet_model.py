@@ -156,10 +156,6 @@ def train_model(model, x, y, epochs=1, batch_size=32, validation_split=0.1, clas
     return history
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 9f95d5eb3601158c49b31f39d5e4eaddb9c48bcb
 def evaluate_model(model, x, y):
     loss, accuracy, iou = model.evaluate(x, y)
     
