@@ -51,7 +51,7 @@ def class_comparison(y_pred, y_test):
 
 
 
-def qol_comparison(y_pred,y_test):
+def qol_comparison(y_pred, y_test):
 
     # Initialize the count lists for preductions
     High_quality_pred = []
