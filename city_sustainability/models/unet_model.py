@@ -12,8 +12,7 @@ from tensorflow.keras.layers import (
     MaxPooling2D,
     UpSampling2D,
     Concatenate,
-    Input,
-)
+    Input,)
 
 def encoder(inputs):
     conv1 = Conv2D(64, (3, 3), activation='relu', padding='same')(inputs)
@@ -157,18 +156,28 @@ def train_model(model, x, y, epochs=1, batch_size=32, validation_split=0.1, clas
     return history
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9f95d5eb3601158c49b31f39d5e4eaddb9c48bcb
 def evaluate_model(model, x, y):
-    loss, accuracy = model.evaluate(x, y)
+    loss, accuracy, iou = model.evaluate(x, y)
     
     # Calculate IoU
     y_pred = model.predict(x)
-    iou = compute_iou(y, y_pred)
+    calculated_iou = compute_iou(y, y_pred)
     
     print("Evaluation results:")
     print(f"Loss: {loss:.4f}")
     print(f"Accuracy: {accuracy:.4f}")
-    print(f"IoU: {iou:.4f}")
+    print(f"Model IoU: {iou:.4f}")
+
+    if calculated_iou is not None:
+        print(f"Calculated IoU: {calculated_iou:.4f}")
+    else:
+        print("Calculated IoU: Not Available")
+    
+    return loss
 
 
 def predict(model, x):
