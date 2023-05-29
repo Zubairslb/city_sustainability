@@ -1,60 +1,81 @@
 import numpy as np
-from PIL import Image
-from keras.utils import to_categorical
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.utils import to_categorical
 
-def image_resize(width, height, image):
-    # Resize the image using the desired width and height
-    return image.resize((width, height))
+# train_image_directory = '/home/mgudipati/code/Zubairslb/city_sustainability/raw_data/resize_train_all/images',
+# train_label_directory = '/home/mgudipati/code/Zubairslb/city_sustainability/raw_data/resize_train_all/labels',
+# val_image_directory = '/home/mgudipati/code/Zubairslb/city_sustainability/raw_data/resize_val_all/images/'.
+# val_label_directory = '/home/mgudipati/code/Zubairslb/city_sustainability/raw_data/resize_val_all/labels/',
 
-def image_and_label_arrays_batch(image_paths, label_paths, sampling_ratio=1, batch_size=32):
-    # Default sampling_ratio is equal to 1.0 (selects all samples)
-    if sampling_ratio < 1.0:
-        end = round(sampling_ratio * len(image_paths))
-        image_paths = image_paths[:end]
-        label_paths = label_paths[:end]
+def batching_from_dir(train_image_directory,
+                      train_label_directory,
+                      val_image_directory,
+                      val_label_directory,
+                      seed = 123,
+                      batch_size=16,
+                      num_classes= 9):
 
-    def generator():
-        batch_images = []
-        batch_labels = []
+    image_datagen = ImageDataGenerator()
+    mask_datagen = ImageDataGenerator()
+    val_img_datagen = ImageDataGenerator()
+    val_lab_datagen = ImageDataGenerator()
 
-        for image_path, label_path in zip(image_paths, label_paths):
-            im = Image.open(image_path)
-            lb = Image.open(label_path)
+    seed = seed
+    batch_size=batch_size
 
-            # Resize each image and label using image_resize function
-            resized_image = image_resize(256, 256, im)
-            resized_label = image_resize(256, 256, lb)
 
-            # Generate array for each image and label
-            numpy_array_image = np.array(resized_image)
-            numpy_array_label = np.array(resized_label)
+    image_generator = image_datagen.flow_from_directory(
+        train_image_directory,
+        class_mode=None,
+        batch_size=batch_size,
+        seed=seed,
+        color_mode='rgb',
+        target_size=(256, 256),
+        subset = None,
+        shuffle=False)
 
-            # Encode labels
-            encoded_label = to_categorical(numpy_array_label, num_classes=9)
+    mask_generator = mask_datagen.flow_from_directory(
+        train_label_directory,
+        class_mode=None,
+        batch_size=batch_size,
+        seed=seed,
+        color_mode='grayscale',
+        target_size=(256, 256),
+        subset =  None,
+        shuffle=False
+    )
 
-            batch_images.append(numpy_array_image)
-            batch_labels.append(encoded_label)
+    val_image_generator = val_img_datagen.flow_from_directory(
+        val_image_directory,
+        class_mode=None,
+        batch_size=batch_size,
+        seed=seed,
+        color_mode='rgb',
+        target_size=(256, 256),
+        subset = None,
+        shuffle=False)
 
-            if len(batch_images) == batch_size:
-                yield np.array(batch_images), np.array(batch_labels)
-                batch_images = []
-                batch_labels = []
+    val_mask_generator = val_lab_datagen.flow_from_directory(
+        val_label_directory,
+        class_mode=None,
+        batch_size=batch_size,
+        seed=seed,
+        color_mode='grayscale',
+        target_size=(256, 256),
+        subset = None,
+        shuffle=False
+    )
 
-        if batch_images:
-            yield np.array(batch_images), np.array(batch_labels)
+    train_generator = zip(image_generator, mask_generator)
+    val_generator = zip(val_image_generator, val_mask_generator)
+    num_classes = num_classes
 
-    # Create the iterator using the generator
-    iterator = generator()
+    def preprocess_labels(labels):
+        categorical_labels = to_categorical(labels, num_classes=num_classes)
+        return categorical_labels
 
-    # Collect batches of images and labels using the iterator
-    image_list_array = []
-    label_list_array = []
 
-    for images, labels in iterator:
-        image_list_array.append(images)
-        label_list_array.append(labels)
+    train_generator = ((images, preprocess_labels(labels)) for images, labels in train_generator)
+    val_generator = ((images, preprocess_labels(labels)) for images, labels in val_generator)
 
-    image_array = np.concatenate(image_list_array, axis=0)  # Concatenate the list of arrays into a single array
-    label_array = np.concatenate(label_list_array, axis=0)  # Concatenate the list of arrays into a single array
-
-    return image_array, label_array
+    return train_generator, val_generator
