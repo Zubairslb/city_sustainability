@@ -59,6 +59,12 @@ predictions = unet_model.predict(model, x_test)
 
 install streamlit by running requirements
 
+go to city_sustainability folder
+run below command
+!pip install requirements.txt
+
+then go to streamlit folder and run below command
+
 streamlit run Home.py
 
 .........................................................................................

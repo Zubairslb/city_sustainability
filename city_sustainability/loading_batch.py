@@ -77,5 +77,3 @@ def batching_from_dir(train_image_directory,
 
     train_generator = ((images, preprocess_labels(labels)) for images, labels in train_generator)
     val_generator = ((images, preprocess_labels(labels)) for images, labels in val_generator)
-
-    return train_generator, val_generator
