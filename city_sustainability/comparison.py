@@ -1,10 +1,10 @@
 from city_sustainability.quality import life_quality
-import numpy as np 
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
 def class_comparison(y_pred, y_test):
-    
+
     Class_labels = {
     0: "Other",
     1: "Bareland",
@@ -51,7 +51,7 @@ def class_comparison(y_pred, y_test):
 
 
 
-def qol_comparison(y_pred,y_act):
+def qol_comparison(y_pred,y_test):
 
     # Initialize the count lists for preductions
     High_quality_pred = []
@@ -69,7 +69,7 @@ def qol_comparison(y_pred,y_act):
             Med_quality_pred.append(1)
         elif classification_pred == 'Low quality of life':
             Low_quality_pred.append(1)
-    
+
     # Get the total counts for each classification
     total_high_quality_pred = len(High_quality_pred)
     total_med_quality_pred = len(Med_quality_pred)
@@ -85,7 +85,7 @@ def qol_comparison(y_pred,y_act):
     for image in y_test:
         # Get the classification for the current image
         class_percentages_act, sorted_metrics_act, classification_act = life_quality(image)
-        
+
         # Update the count lists based on the classification
         if classification_act == 'High quality of life':
             High_quality_act.append(1)
@@ -103,23 +103,23 @@ def qol_comparison(y_pred,y_act):
     labels = ['High', 'Medium', 'Low']
     actual = [total_high_quality_act, total_med_quality_act, total_low_quality_act]
     prediction = [total_high_quality_pred, total_med_quality_pred, total_low_quality_pred]
-    
+
     # Bar plot settings
     bar_width = 0.35
     index = np.arange(len(labels))
-    
+
     # Create the bar plots
     plt.bar(index, actual, bar_width, label='Actual')
     plt.bar(index + bar_width, prediction, bar_width, label='Prediction')
-    
+
     # Set labels and title
     plt.xlabel('Quality of Life')
     plt.ylabel('Count')
     plt.title('Comparison of Actual and Prediction')
-    
+
     # Set x-axis ticks and labels
     plt.xticks(index + bar_width / 2, labels)
-    
+
     # Add legend on the right
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
