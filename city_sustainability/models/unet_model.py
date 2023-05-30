@@ -128,7 +128,7 @@ def compute_iou(y_true, y_pred):
 
 
 
-def train_model(model, x, y, epochs=1, batch_size=32, validation_split=0.1, class_balance=False):
+def train_model(model, x, y, epochs=1, batch_size=32, validation_data=None, validation_split=0.1, class_balance=False):
     if class_balance:
         # Reshape y to have 1 dimension
         y_flat = np.argmax(y, axis=-1)
@@ -150,7 +150,14 @@ def train_model(model, x, y, epochs=1, batch_size=32, validation_split=0.1, clas
     lr_reducer = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=5, min_lr=0.00001, verbose=1)
     early_stopper = EarlyStopping(monitor='val_loss', patience=10, verbose=1)
     
+    
+    if validation_data is not None:
+        validation_split=0
+
+    
     history = model.fit(x, y, epochs=epochs, batch_size=batch_size, validation_split=validation_split,
+                        validation_data=validation_data,
+                        validation_split=validation_split,
                         callbacks=[lr_reducer, early_stopper], sample_weight=sample_weights)
     
     return history
