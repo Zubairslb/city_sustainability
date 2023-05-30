@@ -128,7 +128,7 @@ def compute_iou(y_true, y_pred):
 
 
 
-def train_model(model, x, y, epochs=1, batch_size=32, validation_data=None, validation_split=0.1, class_balance=False):
+def train_model(model, x, y, epochs=1, batch_size=32, validation_data=None, validation_split=0.1, class_balance=False, ignore_class_zero=False):
     if class_balance:
         # Reshape y to have 1 dimension
         y_flat = np.argmax(y, axis=-1)
@@ -139,6 +139,8 @@ def train_model(model, x, y, epochs=1, batch_size=32, validation_data=None, vali
         
         # Calculate class weights
         class_weights = np.max(class_counts) / class_counts
+        if ignore_class_zero == True:
+            class_weights[0] = 0
         
         # Generate pixel-wise sample weights based on class weights
         sample_weights = np.take(class_weights, y_flat)
