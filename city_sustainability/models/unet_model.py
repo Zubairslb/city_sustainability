@@ -157,10 +157,11 @@ def train_model(model, x, y, epochs=1, batch_size=32, validation_data=None, vali
     
     history = model.fit(x, y, epochs=epochs, batch_size=batch_size, validation_split=validation_split,
                         validation_data=validation_data,
-                        validation_split=validation_split,
                         callbacks=[lr_reducer, early_stopper], sample_weight=sample_weights)
     
     return history
+
+
 
 
 def evaluate_model(model, x, y):
