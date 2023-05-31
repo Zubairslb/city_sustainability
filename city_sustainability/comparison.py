@@ -2,6 +2,8 @@ from city_sustainability.quality import life_quality
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
 
 def class_comparison(y_pred, y_test):
 
@@ -49,19 +51,19 @@ def class_comparison(y_pred, y_test):
 
     return df, plt.show()
 
-
-
 def qol_comparison(y_pred, y_test):
 
     # Initialize the count lists for preductions
     High_quality_pred = []
     Med_quality_pred = []
     Low_quality_pred = []
+    quality_pred = []
 
     # Loop over all the images
     for image in y_pred:
         # Get the classification for the current image
         class_percentages_pred, sorted_metrics_pred, classification_pred = life_quality(image)
+        quality_pred.append(classification_pred)
         # Update the count lists based on the classification
         if classification_pred == 'High quality of life':
             High_quality_pred.append(1)
@@ -75,17 +77,17 @@ def qol_comparison(y_pred, y_test):
     total_med_quality_pred = len(Med_quality_pred)
     total_low_quality_pred = len(Low_quality_pred)
 
-
     # Initialize the count lists for actual
     High_quality_act = []
     Med_quality_act = []
     Low_quality_act = []
+    quality_act = []
 
     # Loop over all the images
     for image in y_test:
         # Get the classification for the current image
         class_percentages_act, sorted_metrics_act, classification_act = life_quality(image)
-
+        quality_act.append(classification_act)
         # Update the count lists based on the classification
         if classification_act == 'High quality of life':
             High_quality_act.append(1)
@@ -126,5 +128,15 @@ def qol_comparison(y_pred, y_test):
     # Create the dataframe
     data = {'Quality of Life': labels, 'Actual': actual, 'Prediction': prediction}
     df = pd.DataFrame(data)
+
+    # Calculate confusion matrix
+    cm = confusion_matrix(quality_act, quality_pred, labels=labels)
+
+    # Plot confusion matrix
+    plt.figure()
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+    plt.xlabel('Predicted')
+    plt.ylabel('Actual')
+    plt.title('Confusion Matrix')
 
     return df, plt.show()
