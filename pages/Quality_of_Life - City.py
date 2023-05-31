@@ -32,7 +32,7 @@ def create_map(latitude, longitude):
     map_center = [latitude, longitude]
     m = folium.Map(
         location=map_center,
-        zoom_start=17,
+        zoom_start=16,
         tiles="https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}@2x.jpg?access_token=pk.eyJ1IjoibWFsbWFocm9vcyIsImEiOiJjbGlhNnp1bnkwMHJpM3NzNmI0aW5zMGo1In0.I9GCCN-ZzW1RCfqw190w2g",
         attr="Mapbox attribution"
         )
@@ -65,7 +65,7 @@ if len(city) > 0:
     st.write("## Below is a snapshot of the desired area and")
 
     # Get Satellite Image
-    def get_satellite_image(latitude, longitude, map_zoom=17):
+    def get_satellite_image(latitude, longitude, map_zoom=16):
         x,y = deg2num(latitude, longitude, map_zoom)
         url = f'https://api.mapbox.com/v4/mapbox.satellite/{map_zoom}/{x}/{y}@2x.jpg?access_token=pk.eyJ1IjoibWFsbWFocm9vcyIsImEiOiJjbGlhNnp1bnkwMHJpM3NzNmI0aW5zMGo1In0.I9GCCN-ZzW1RCfqw190w2g'
         response = requests.get(url)
