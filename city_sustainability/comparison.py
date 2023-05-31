@@ -130,7 +130,8 @@ def qol_comparison(y_pred, y_test):
     df = pd.DataFrame(data)
 
     # Calculate confusion matrix
-    cm = confusion_matrix(quality_act, quality_pred, labels=labels)
+    labels_1 = ['High quality of life', 'Medium quality of life', 'Low quality of life']
+    cm = confusion_matrix(quality_act, quality_pred, labels=labels_1)
 
     # Plot confusion matrix
     plt.figure()
