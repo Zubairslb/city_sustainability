@@ -2,6 +2,8 @@ from city_sustainability.quality import life_quality
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
 
 def class_comparison(y_pred, y_test):
 
@@ -126,5 +128,15 @@ def qol_comparison(y_pred, y_test):
     # Create the dataframe
     data = {'Quality of Life': labels, 'Actual': actual, 'Prediction': prediction}
     df = pd.DataFrame(data)
+
+    # Calculate confusion matrix
+    cm = confusion_matrix(y_test, y_pred, labels=labels)
+
+    # Plot confusion matrix
+    plt.figure()
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+    plt.xlabel('Predicted')
+    plt.ylabel('Actual')
+    plt.title('Confusion Matrix')
 
     return df, plt.show()
