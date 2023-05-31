@@ -1,0 +1,13 @@
+pytest
+pylint
+ipdb
+jupyterlab
+numpy
+pandas
+matplotlib
+seaborn
+scikit-learn
+notebook
+tensorflow
+streamlit
+google-cloud-storage
