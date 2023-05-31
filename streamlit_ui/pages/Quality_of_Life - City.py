@@ -52,7 +52,6 @@ if len(city) > 0:
     longitude = location.longitude
     map = create_map(latitude, longitude)
     st_data = st_folium(map)
-    st.write(st_data)
 
     st.write("## Once satisfied, scroll below and witness the magic :boom:")
 
