@@ -90,7 +90,7 @@ if len(city) > 0:
 
     # Load model
     path = os.path.dirname(__file__)
-    model_path = path + "/../model/model_256_vgg_balance_datasplit_3005.h5"
+    model_path = path + "/../model/model_vgg16_s.h5"
 
     model = load_model(model_path,custom_objects={'compute_iou': compute_iou})
 
