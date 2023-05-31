@@ -83,7 +83,7 @@ if len(city) > 0:
     numpy_array_image = np.array(resized_im)
 
     # Scale the image
-    numpy_array_image = numpy_array_image / 255
+    # numpy_array_image = numpy_array_image / 255
 
     # Expand image
     expanded_image = np.expand_dims(numpy_array_image, axis=0)
