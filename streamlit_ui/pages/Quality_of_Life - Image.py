@@ -48,7 +48,7 @@ if data_file is not None:
 
     # Load model
     path = os.path.dirname(__file__)
-    model_path = path + "/../model/model_vgg16_s.h5"
+    model_path = path + "/../model/20230531-08-unet_vgg16_1.00img_50epch_64btch_0.60acc_0.31iou.h5"
 
     model = load_model(model_path,custom_objects={'compute_iou': compute_iou})
 
