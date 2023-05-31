@@ -46,7 +46,7 @@ st.title("Select any city around the world and get the Quality of Life classific
 st.write("## Enter any city below and use the interactive map to keep the desired area in the center")
 
 # Create a geocoder
-geolocator = Nominatim(user_agent="myGeocoder")
+geolocator = Nominatim(user_agent="myGeocoder", timeout=10)
 
 # Get the user input
 city = st.text_input("")
