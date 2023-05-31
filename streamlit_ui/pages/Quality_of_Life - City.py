@@ -14,6 +14,7 @@ import io
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 from city_sustainability.quality import life_quality
+import os
 
 def deg2num(lat_deg, lon_deg, zoom):
     lat_rad = math.radians(lat_deg)
@@ -88,7 +89,8 @@ if len(city) > 0:
     expanded_image = np.expand_dims(numpy_array_image, axis=0)
 
     # Load model
-    model_path = 'model/model_256_vgg_balance_datasplit_3005.h5'
+    path = os.path.dirname(__file__)
+    model_path = path + "/../model/model_256_vgg_balance_datasplit_3005.h5"
 
     model = load_model(model_path,custom_objects={'compute_iou': compute_iou})
 

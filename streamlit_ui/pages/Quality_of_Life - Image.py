@@ -10,6 +10,7 @@ from city_sustainability.preprocessing import image_resize
 from tensorflow.keras.models import load_model
 from city_sustainability.models.unet_model import compute_iou
 import matplotlib.patches as mpatches
+import os
 
 # Streamlit codes to make the page look better
 
@@ -46,7 +47,8 @@ if data_file is not None:
     expanded_image = np.expand_dims(numpy_array_image, axis=0)
 
     # Load model
-    model_path = 'model/model_256_vgg_balance_datasplit_3005.h5'
+    path = os.path.dirname(__file__)
+    model_path = path + "/../model/model_256_vgg_balance_datasplit_3005.h5"
 
     model = load_model(model_path,custom_objects={'compute_iou': compute_iou})
 
