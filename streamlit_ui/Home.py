@@ -5,6 +5,9 @@ import PIL
 import matplotlib.pyplot as plt
 import os
 
+# Streamlit codes to make the page look better
+
+st.set_page_config(layout="wide")
 
 st.title("Welcome to our City Sustainability Platform​ :smile:")
 

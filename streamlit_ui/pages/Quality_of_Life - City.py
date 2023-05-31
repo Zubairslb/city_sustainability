@@ -16,6 +16,10 @@ import matplotlib.pyplot as plt
 from city_sustainability.quality import life_quality
 import os
 
+# Streamlit codes to make the page look better
+
+st.set_page_config(layout="wide")
+
 def deg2num(lat_deg, lon_deg, zoom):
     lat_rad = math.radians(lat_deg)
     n = 2.0 ** zoom
