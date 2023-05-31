@@ -11,7 +11,7 @@ st.write("## What is City Sustainability? :city_sunrise:")
 st.write("#### City sustainability refers to the concept of creating and maintaining cities that are environmentally, socially, and economically sustainable. It involves developing urban areas that minimize their impact on the environment, promote social equity, and support economic prosperity.")
 
 # Provide the path or URL of the image
-image = "/home/malmahroos/code/Zubairslb/city_sustainability/streamlit_ui/City.jpg"
+image = "Images/City.jpg"
 # or image_url = "https://example.com/image.jpg"
 
 # Display the image
@@ -30,7 +30,7 @@ st.write("- The encoder is the first half in the architecture diagram. It usuall
 st.write(" - The decoder is the second half of the architecture. The goal is to semantically project the discriminative features (lower resolution) learnt by the encoder onto the pixel space (higher resolution) to get a dense classification. The decoder consists of upsampling and concatenation followed by regular convolution operations.")
 
 # Provide the path or URL of the image
-image_path = "/home/malmahroos/code/Zubairslb/city_sustainability/streamlit_ui/UNet Model.PNG"
+image_path = "Images/UNet Model.PNG"
 # or image_url = "https://example.com/image.jpg"
 
 # Display the image
@@ -42,7 +42,7 @@ st.write("## Dataset :books:")
 st.write("#### The Dataset used to train our model consists of certain classes and annotations as shown below:")
 
 # Provide the path or URL of the image
-image_path_2 = "/home/malmahroos/code/Zubairslb/city_sustainability/streamlit_ui/Dataset Classes.png"
+image_path_2 = "Images/Dataset Classes.png"
 # or image_url = "https://example.com/image.jpg"
 
 # Display the image
@@ -58,7 +58,7 @@ st.write("## About Us :raised_hand:")
 st.write("#### We are a group of SLB engineers coming from various backgrounds and united in our interest in Data Science :computer:")
 
 # Provide the path or URL of the image
-image_path_3 = "/home/malmahroos/code/Zubairslb/city_sustainability/streamlit_ui/Logos.PNG"
+image_path_3 = "Images/Logos.PNG"
 # or image_url = "https://example.com/image.jpg"
 
 # Display the image

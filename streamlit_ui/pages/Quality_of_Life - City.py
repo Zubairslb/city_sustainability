@@ -90,7 +90,7 @@ if len(city) > 0:
     expanded_image = np.expand_dims(numpy_array_image, axis=0)
 
     # Load model
-    model_path = '/home/malmahroos/code/Zubairslb/city_sustainability/vgg16_model_100_2505.h5'
+    model_path = 'model/model_256_vgg_balance_datasplit_3005.h5'
 
     model = load_model(model_path,custom_objects={'compute_iou': compute_iou})
 
