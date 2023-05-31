@@ -25,8 +25,6 @@ def deg2num(lat_deg, lon_deg, zoom):
 def create_map(latitude, longitude):
     # Create a Folium map centered at the specified latitude and longitude
     map_center = [latitude, longitude]
-    map_zoom = 17
-    x, y = deg2num(latitude, longitude, map_zoom)
     m = folium.Map(
         location=map_center,
         zoom_start=17,
@@ -54,6 +52,7 @@ if len(city) > 0:
     longitude = location.longitude
     map = create_map(latitude, longitude)
     st_data = st_folium(map)
+    st.write(st_data)
 
     st.write("## Once satisfied, scroll below and witness the magic :boom:")
 
@@ -62,8 +61,7 @@ if len(city) > 0:
     st.write("## Below is a snapshot of the desired area and")
 
     # Get Satellite Image
-    def get_satellite_image(latitude, longitude):
-        map_zoom = 17
+    def get_satellite_image(latitude, longitude, map_zoom=17):
         x,y = deg2num(latitude, longitude, map_zoom)
         url = f'https://api.mapbox.com/v4/mapbox.satellite/{map_zoom}/{x}/{y}@2x.jpg?access_token=pk.eyJ1IjoibWFsbWFocm9vcyIsImEiOiJjbGlhNnp1bnkwMHJpM3NzNmI0aW5zMGo1In0.I9GCCN-ZzW1RCfqw190w2g'
         response = requests.get(url)
@@ -71,8 +69,9 @@ if len(city) > 0:
 
     latitude_1 = st_data["center"]["lat"]
     longitude_1 = st_data["center"]["lng"]
+    zoom_1 = st_data["zoom"]
 
-    data = get_satellite_image(latitude_1, longitude_1)
+    data = get_satellite_image(latitude_1, longitude_1,zoom_1)
 
     # Generate image
     im_1 = Image.open(io.BytesIO(data))
