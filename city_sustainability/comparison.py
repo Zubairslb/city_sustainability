@@ -129,14 +129,38 @@ def qol_comparison(y_pred, y_test):
     data = {'Quality of Life': labels, 'Actual': actual, 'Prediction': prediction}
     df = pd.DataFrame(data)
 
+    quality_dic = {
+        "High quality of life": 0,
+        "Medium quality of life": 1,
+        "Low quality of life": 2
+        }
+
+    labels = ['High', 'Medium', 'Low']
+    n_labels = len(labels)
+
+    # Convert labels to numerical values
+    quality_act_values = [quality_dic[x] for x in quality_act]
+    quality_pred_values = [quality_dic[x] for x in quality_pred]
+
     # Calculate confusion matrix
-    cm = confusion_matrix(quality_act, quality_pred, labels=labels)
+    cm = confusion_matrix(quality_act_values, quality_pred_values, labels=np.arange(n_labels))
+
+    # Convert values to percentages
+    cm_percent = np.zeros_like(cm, dtype=float)
+    for i in range(n_labels):
+        row_sum = cm[i].sum()
+        if row_sum != 0:
+            cm_percent[i] = cm[i].astype('float') / row_sum * 100
+        else:
+            cm_percent[i] = np.nan
 
     # Plot confusion matrix
     plt.figure()
-    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+    sns.heatmap(cm_percent, annot=True, fmt='.2f', cmap='Blues')
     plt.xlabel('Predicted')
     plt.ylabel('Actual')
     plt.title('Confusion Matrix')
+    plt.xticks(np.arange(n_labels) + 0.5, labels)
+    plt.yticks(np.arange(n_labels) + 0.5, labels)
 
     return df, plt.show()
