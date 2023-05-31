@@ -11,3 +11,6 @@ notebook
 tensorflow
 streamlit
 google-cloud-storage
+geopy
+folium
+streamlit_folium
